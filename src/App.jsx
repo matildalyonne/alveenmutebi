@@ -126,6 +126,7 @@ const documents = [
   { label: 'DHCA-TXM Certificate',   type: 'PDF', file: 'DHCA_TXM_Certificate.pdf', icon: '🏅' },
   { label: 'UCU Diploma Transcript', type: 'PDF', file: 'UCU_Transcript.pdf',        icon: '🎓' },
   { label: 'UACE Result Slip',       type: 'PDF', file: 'UACE_Result_Slip.pdf',      icon: '📋' },
+  { label: 'UCE Certificate',       type: 'PDF', file: 'UCE_Certificate.pdf',      icon: '📋' },
 ]
 
 /* ── SCRUBABLE CAROUSEL ROW ────────────────────────────────────────────── */
