@@ -245,7 +245,10 @@ function Nav({ dark, toggleDark }) {
 
   return (
     <nav className="nav">
-      <div className="nav-logo">Mutebi Alveen</div>
+      <div className="nav-logo">
+        <img src="/logo.png" alt="Logo" className="nav-logo-img" />
+        Mutebi Alveen
+      </div>
 
       {/* Desktop links */}
       <div className="nav-links">
@@ -427,7 +430,6 @@ function Skills() {
           <CarouselRow items={toolsRow1Base} direction="left"  speed={0.45} />
           <CarouselRow items={toolsRow2Base} direction="right" speed={0.35} />
         </div>
-        <p className="carousel-hint">Drag to scrub · Hover or tap a logo for its name</p>
       </div>
     </section>
   )

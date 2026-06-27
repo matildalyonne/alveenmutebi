@@ -139,6 +139,8 @@
   color: var(--muted); transition: color 0.15s, background 0.15s;
 }
 .mobile-menu a:hover { color: var(--lav-light); background: var(--lav-glow); }
+.nav-logo { display: flex; align-items: center; gap: 0.5rem; }
+.nav-logo-img { width: 28px; height: 28px; object-fit: contain; border-radius: 4px; }
 
 /* ══════════════════════════════════════════════
    HERO
