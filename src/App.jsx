@@ -122,7 +122,6 @@ const certifications = [
 
 const documents = [
   { label: 'Curriculum Vitae',       type: 'PDF', file: 'Mutebi_Alveen_CV.pdf',     icon: '📄' },
-  {},
 ]
 
 /* ── SCRUBABLE CAROUSEL ROW ────────────────────────────────────────────── */
@@ -270,6 +269,7 @@ function Nav({ dark, toggleDark }) {
         <a href="#experience">Experience</a>
         <a href="#education">Education</a>
         <a href="#skills">Skills</a>
+        <a href="#documents">Documents</a>
         <a href="#contact">Contact</a>
       </div>
       <button
@@ -301,20 +301,7 @@ function Hero() {
       </p>
       <div className="hero-ctas">
         <a href="#contact" className="btn-primary">Get in touch</a>
-        <div className="docs-grid">
-                  {documents.map((doc, i) => (
-                            <a
-                                        key={i}
-                                                    className="doc-card"
-                                                                href={`/documents/${doc.file}`}
-                                                                            download={doc.file}
-                                                                                      >
-                                                                                                  <div className="doc-icon-wrap">{doc.icon}</div>
-                                                                                                              <div><div className="doc-name">{doc.label}</div></div>
-                                                                                                                          <div className="doc-dl">↓</div>
-                                                                                                                                    </a>
-                                                                                                                                            ))}
-                                                                                                                                                  </div>
+        <a href="#documents" className="btn-outline">Download CV</a>
       </div>
     </section>
   )
@@ -415,12 +402,33 @@ function Skills() {
           <CarouselRow items={toolsRow1Base} direction="left"  speed={0.45} />
           <CarouselRow items={toolsRow2Base} direction="right" speed={0.35} />
         </div>
-        <p className="carousel-hint">Drag to scrub · Hover or tap a logo for its name</p>
       </div>
     </section>
   )
 }
 
+function Documents() {
+  return (
+    <section className="section section-alt" id="documents">
+      <p className="section-label">Downloads</p>
+      <h2 className="section-heading"><em>Documents</em></h2>
+      <div className="docs-grid">
+        {documents.map((doc, i) => (
+          <a
+            key={i}
+            className="doc-card"
+            href={`/documents/${doc.file}`}
+            download={doc.file}
+          >
+            <div className="doc-icon-wrap">{doc.icon}</div>
+            <div><div className="doc-name">{doc.label}</div></div>
+            <div className="doc-dl">↓</div>
+          </a>
+        ))}
+      </div>
+    </section>
+  )
+}
 
 function Contact() {
   return (
