@@ -276,64 +276,70 @@
    ══════════════════════════════════════════════ */
 .carousel-section { margin-top: 3.5rem; }
 
-.carousel-wrapper {
+/* Outer wrapper for both rows — fades edges */
+.carousel-outer {
   display: flex; flex-direction: column; gap: 1rem;
+  mask-image: linear-gradient(90deg, transparent 0%, black 7%, black 93%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 7%, black 93%, transparent 100%);
+}
+
+/* Per-row: clips overflow and accepts pointer drag */
+.carousel-row-outer {
   overflow: hidden;
-  /* fade edges */
-  mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
 }
+.carousel-row-outer:active { cursor: grabbing; }
 
+/* The moving strip — positioned by JS translateX */
 .carousel-track {
-  display: flex; gap: 1.2rem;
-  /* each logo cell is fixed width so all logos are the same size */
+  display: flex;
+  gap: 1.2rem;
+  will-change: transform;
 }
 
-.track-left  { animation: scrollLeft  28s linear infinite; }
-.track-right { animation: scrollRight 28s linear infinite; }
-
-@keyframes scrollLeft {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-@keyframes scrollRight {
-  from { transform: translateX(-50%); }
-  to   { transform: translateX(0); }
-}
-
-/* Pause on hover for the whole carousel */
-.carousel-wrapper:hover .carousel-track { animation-play-state: paused; }
-
+/* ── Logo tile ── */
 .tool-logo-item {
   width: 128px; height: 128px;
   flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  background: var(--panel);
+  /* Light lavender in dark mode so dark-text logos stay readable */
+  background: var(--logo-bg, #EDE8F8);
   border: 1px solid var(--border);
   border-radius: 10px;
   cursor: pointer;
   position: relative;
-  transition: border-color 0.2s, transform 0.15s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
-.tool-logo-item:hover { border-color: var(--lavender); transform: scale(1.08); }
+/* Dark theme: light lavender tile */
+.theme-dark  .tool-logo-item { --logo-bg: #EDE8F8; }
+/* Light theme: white tile */
+.theme-light .tool-logo-item { --logo-bg: #FFFFFF; }
+
+.tool-logo-item:hover { border-color: var(--lavender); box-shadow: 0 0 0 2px var(--lav-glow); }
 
 .tool-logo-img {
   width: 100px; height: 100px;
   object-fit: contain;
+  pointer-events: none;
+  draggable: false;
 }
 
+/* ── Tooltip ── */
 .tool-tooltip {
   position: absolute;
-  bottom: calc(100% + 6px);
+  bottom: calc(100% + 7px);
   left: 50%; transform: translateX(-50%);
   background: var(--lavender);
   color: #fff;
-  font-size: 0.7rem; font-weight: 600;
+  font-size: 0.68rem; font-weight: 600;
   white-space: nowrap;
-  padding: 0.25rem 0.55rem;
+  padding: 0.22rem 0.55rem;
   border-radius: 4px;
   pointer-events: none;
-  z-index: 10;
+  z-index: 20;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 .tool-tooltip::after {
   content: '';
@@ -344,7 +350,7 @@
 
 .carousel-hint {
   font-size: 0.72rem; color: var(--muted);
-  margin-top: 0.75rem; letter-spacing: 0.04em;
+  margin-top: 0.9rem; letter-spacing: 0.04em;
 }
 
 /* ══════════════════════════════════════════════
