@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './App.css'
 
 /* ── DATA ─────────────────────────────────────────────────────────────── */
@@ -48,21 +49,25 @@ const education = [
     degree: 'Diploma in Information Technology',
     school: 'Uganda Christian University, Mukono',
     year: '2024 – 2026',
+    logo: '/logo/school/uganda_christian_university.png',
   },
   {
     degree: 'Uganda Advanced Certificate of Education (UACE)',
     school: 'Mengo Senior School, Kampala',
     year: '2020 – 2022',
+    logo: '/logo/school/mengo_senior_school.png',
   },
   {
     degree: 'Uganda Certificate of Education (UCE)',
     school: "St Mary's College Kisubi, Entebbe",
     year: '2016 – 2019',
+    logo: '/logo/school/st_marys_college_kisubi.png',
   },
   {
     degree: 'Primary Leaving Education (PLE)',
     school: 'Kyengera Parents School, Kyengera',
     year: '2009 – 2015',
+    logo: '/logo/school/kyengera_parents_school.png',
   },
 ]
 
@@ -78,63 +83,93 @@ const technicalSkills = [
   'Basic Accounting',
 ]
 
-const tools = [
-  'Python', 'HTML / CSS / JavaScript', 'React',
-  'Microsoft Office Suite', 'DoLynk Care', 'DMSS',
+// Tools split into two rows for the carousel
+const toolsRow1 = [
+  { name: 'Figma',              file: 'figma-seeklogo.png' },
+  { name: 'Git',                file: 'git-seeklogo.png' },
+  { name: 'Netlify',            file: 'netlify-seeklogo.png' },
+  { name: 'PicsArt',            file: 'picsart-seeklogo.png' },
+  { name: 'Python',             file: 'python-seeklogo.png' },
+  { name: 'React',              file: 'react-seeklogo.png' },
+  { name: 'Supabase',           file: 'supabase-seeklogo.png' },
+  { name: 'Vite',               file: 'vite-seeklogo.png' },
+  { name: 'Figma',              file: 'figma-seeklogo.png' },
+  { name: 'Git',                file: 'git-seeklogo.png' },
+  { name: 'Netlify',            file: 'netlify-seeklogo.png' },
+  { name: 'PicsArt',            file: 'picsart-seeklogo.png' },
+  { name: 'Python',             file: 'python-seeklogo.png' },
+  { name: 'React',              file: 'react-seeklogo.png' },
+  { name: 'Supabase',           file: 'supabase-seeklogo.png' },
+  { name: 'Vite',               file: 'vite-seeklogo.png' },
+]
+
+const toolsRow2 = [
+  { name: 'CSS3',               file: 'css3-seeklogo.png' },
+  { name: 'Dahua',              file: 'dahua-seeklogo.png' },
+  { name: 'DoLynk Care',        file: 'dolynk.png' },
+  { name: 'HTML5',              file: 'html5-seeklogo.png' },
+  { name: 'LaTeX',              file: 'latex-seeklogo.png' },
+  { name: 'Microsoft Office',   file: 'microsoft office.png' },
+  { name: 'MySQL',              file: 'mysql-seeklogo.png' },
+  { name: 'Node.js',            file: 'node-js-seeklogo.png' },
+  { name: 'Intuit QuickBooks',  file: 'quickbooks-seeklogo.png' },
+  { name: 'CSS3',               file: 'css3-seeklogo.png' },
+  { name: 'Dahua',              file: 'dahua-seeklogo.png' },
+  { name: 'DoLynk Care',        file: 'dolynk.png' },
+  { name: 'HTML5',              file: 'html5-seeklogo.png' },
+  { name: 'LaTeX',              file: 'latex-seeklogo.png' },
+  { name: 'Microsoft Office',   file: 'microsoft office.png' },
+  { name: 'MySQL',              file: 'mysql-seeklogo.png' },
+  { name: 'Node.js',            file: 'node-js-seeklogo.png' },
+  { name: 'Intuit QuickBooks',  file: 'quickbooks-seeklogo.png' },
 ]
 
 const certifications = [
   {
     name: 'Access Control System Certified Associate (DHCA-ACS)',
     issuer: 'Dahua Technologies, Kampala — 2026',
-    icon: '🔐',
+    logo: '/logo/tools/dahua.png',
   },
   {
     name: 'Data Communication System Certified Associate (DHCA-TXM)',
     issuer: 'Dahua Technologies, Kampala — 2026',
-    icon: '📡',
+    logo: '/logo/tools/dahua.png',
   },
 ]
 
-// ── Documents: place files in /public/documents/
-// Set "file" to match the exact filename you drop in that folder.
-// "label" and "type" are for display only.
 const documents = [
-  {
-    label: 'Curriculum Vitae',
-    type: 'PDF',
-    file: 'Mutebi_Alveen_CV.pdf',
-    icon: '📄',
-  },
-  {
-    label: 'DHCA-ACS Certificate',
-    type: 'PDF',
-    file: 'DHCA_ACS_Certificate.pdf',
-    icon: '🏅',
-  },
-  {
-    label: 'DHCA-TXM Certificate',
-    type: 'PDF',
-    file: 'DHCA_TXM_Certificate.pdf',
-    icon: '🏅',
-  },
-  {
-    label: 'UCU Diploma Transcript',
-    type: 'PDF',
-    file: 'UCU_Transcript.pdf',
-    icon: '🎓',
-  },
-  {
-    label: 'UACE Result Slip',
-    type: 'PDF',
-    file: 'UACE_Result_Slip.pdf',
-    icon: '📋',
-  },
+  { label: 'Curriculum Vitae',      type: 'PDF', file: 'Mutebi_Alveen_CV.pdf',      icon: '📄' },
+  { label: 'DHCA-ACS Certificate',  type: 'PDF', file: 'DHCA_ACS_Certificate.pdf',  icon: '🏅' },
+  { label: 'DHCA-TXM Certificate',  type: 'PDF', file: 'DHCA_TXM_Certificate.pdf',  icon: '🏅' },
+  { label: 'UCU Diploma Transcript', type: 'PDF', file: 'UCU_Transcript.pdf',        icon: '🎓' },
+  { label: 'UACE Result Slip',       type: 'PDF', file: 'UACE_Result_Slip.pdf',      icon: '📋' },
 ]
+
+/* ── TOOL LOGO ITEM ────────────────────────────────────────────────────── */
+function ToolLogo({ name, file }) {
+  const [tooltip, setTooltip] = useState(false)
+  return (
+    <div
+      className="tool-logo-item"
+      onClick={() => setTooltip(t => !t)}
+      onMouseEnter={() => setTooltip(true)}
+      onMouseLeave={() => setTooltip(false)}
+      title={name}
+    >
+      <img
+        src={`/logo/tools/${file}`}
+        alt={name}
+        className="tool-logo-img"
+        onError={e => { e.target.style.opacity = '0.2' }}
+      />
+      {tooltip && <div className="tool-tooltip">{name}</div>}
+    </div>
+  )
+}
 
 /* ── COMPONENTS ───────────────────────────────────────────────────────── */
 
-function Nav() {
+function Nav({ dark, toggleDark }) {
   return (
     <nav className="nav">
       <div className="nav-logo">Mutebi Alveen</div>
@@ -145,6 +180,14 @@ function Nav() {
         <a href="#documents">Documents</a>
         <a href="#contact">Contact</a>
       </div>
+      <button
+        className="theme-toggle"
+        onClick={toggleDark}
+        aria-label="Toggle colour mode"
+        title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+      >
+        {dark ? '☀️' : '🌙'}
+      </button>
     </nav>
   )
 }
@@ -202,15 +245,23 @@ function Education() {
   return (
     <section className="section section-alt" id="education">
       <p className="section-label">Academic Background</p>
-      <h2 className="section-heading">
-        <em>Education</em>
-      </h2>
+      <h2 className="section-heading"><em>Education</em></h2>
       <div className="edu-grid">
         {education.map((ed, i) => (
           <div className="edu-card" key={i}>
+            <div className="edu-card-header">
+              <img
+                src={ed.logo}
+                alt={`${ed.school} logo`}
+                className="edu-logo"
+                onError={e => { e.target.style.display = 'none' }}
+              />
+              <div>
+                <div className="edu-school">{ed.school}</div>
+                <div className="edu-year">{ed.year}</div>
+              </div>
+            </div>
             <div className="edu-degree">{ed.degree}</div>
-            <div className="edu-school">{ed.school}</div>
-            <div className="edu-year">{ed.year}</div>
           </div>
         ))}
       </div>
@@ -222,28 +273,29 @@ function Skills() {
   return (
     <section className="section" id="skills">
       <p className="section-label">Capabilities</p>
-      <h2 className="section-heading">
-        Skills &amp; <em>Tools</em>
-      </h2>
+      <h2 className="section-heading">Skills &amp; <em>Tools</em></h2>
 
       <div className="skills-grid">
+        {/* LEFT: technical skill chips */}
         <div>
           <p className="skills-group-label">Technical Skills</p>
           <div className="chips">
             {technicalSkills.map((s, i) => <span className="chip" key={i}>{s}</span>)}
           </div>
         </div>
-        <div>
-          <p className="skills-group-label">Tools &amp; Platforms</p>
-          <div className="chips">
-            {tools.map((t, i) => <span className="chip" key={i}>{t}</span>)}
-          </div>
 
-          <p className="skills-group-label" style={{ marginTop: '2rem' }}>Certifications</p>
+        {/* RIGHT: certifications with Dahua logo */}
+        <div>
+          <p className="skills-group-label">Certifications</p>
           <div className="cert-list">
             {certifications.map((c, i) => (
               <div className="cert-item" key={i}>
-                <div className="cert-icon">{c.icon}</div>
+                <img
+                  src={c.logo}
+                  alt="Dahua Technologies"
+                  className="cert-logo"
+                  onError={e => { e.target.style.display = 'none' }}
+                />
                 <div>
                   <div className="cert-name">{c.name}</div>
                   <div className="cert-issuer">{c.issuer}</div>
@@ -253,6 +305,24 @@ function Skills() {
           </div>
         </div>
       </div>
+
+      {/* CAROUSEL: two rows of tool logos */}
+      <div className="carousel-section">
+        <p className="skills-group-label" style={{ marginBottom: '1.5rem' }}>Tools &amp; Platforms</p>
+
+        <div className="carousel-wrapper">
+          {/* Row 1 — scrolls left */}
+          <div className="carousel-track track-left">
+            {toolsRow1.map((t, i) => <ToolLogo key={i} {...t} />)}
+          </div>
+          {/* Row 2 — scrolls right (opposite direction) */}
+          <div className="carousel-track track-right">
+            {toolsRow2.map((t, i) => <ToolLogo key={i} {...t} />)}
+          </div>
+        </div>
+
+        <p className="carousel-hint">Tap or hover a logo to see its name</p>
+      </div>
     </section>
   )
 }
@@ -261,9 +331,7 @@ function Documents() {
   return (
     <section className="section section-alt" id="documents">
       <p className="section-label">Downloads</p>
-      <h2 className="section-heading">
-        <em>Documents</em>
-      </h2>
+      <h2 className="section-heading"><em>Documents</em></h2>
       <div className="docs-grid">
         {documents.map((doc, i) => (
           <a
@@ -351,9 +419,11 @@ function Footer() {
 /* ── APP ──────────────────────────────────────────────────────────────── */
 
 export default function App() {
+  const [dark, setDark] = useState(true)
+
   return (
-    <>
-      <Nav />
+    <div className={dark ? 'theme-dark' : 'theme-light'}>
+      <Nav dark={dark} toggleDark={() => setDark(d => !d)} />
       <main>
         <Hero />
         <hr className="lav-rule" />
@@ -368,6 +438,6 @@ export default function App() {
         <Contact />
       </main>
       <Footer />
-    </>
+    </div>
   )
 }
