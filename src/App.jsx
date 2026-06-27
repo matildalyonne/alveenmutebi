@@ -122,11 +122,7 @@ const certifications = [
 
 const documents = [
   { label: 'Curriculum Vitae',       type: 'PDF', file: 'Mutebi_Alveen_CV.pdf',     icon: '📄' },
-  { label: 'DHCA-ACS Certificate',   type: 'PDF', file: 'DHCA_ACS_Certificate.pdf', icon: '🏅' },
-  { label: 'DHCA-TXM Certificate',   type: 'PDF', file: 'DHCA_TXM_Certificate.pdf', icon: '🏅' },
-  { label: 'UCU Diploma Transcript', type: 'PDF', file: 'UCU_Transcript.pdf',        icon: '🎓' },
-  { label: 'UACE Result Slip',       type: 'PDF', file: 'UACE_Result_Slip.pdf',      icon: '📋' },
-  { label: 'UCE Certificate',       type: 'PDF', file: 'UCE_Certificate.pdf',      icon: '📋' },
+  {},
 ]
 
 /* ── SCRUBABLE CAROUSEL ROW ────────────────────────────────────────────── */
@@ -274,7 +270,6 @@ function Nav({ dark, toggleDark }) {
         <a href="#experience">Experience</a>
         <a href="#education">Education</a>
         <a href="#skills">Skills</a>
-        <a href="#documents">Documents</a>
         <a href="#contact">Contact</a>
       </div>
       <button
@@ -306,7 +301,20 @@ function Hero() {
       </p>
       <div className="hero-ctas">
         <a href="#contact" className="btn-primary">Get in touch</a>
-        <a href="#documents" className="btn-outline">Download CV</a>
+        <div className="docs-grid">
+                  {documents.map((doc, i) => (
+                            <a
+                                        key={i}
+                                                    className="doc-card"
+                                                                href={`/documents/${doc.file}`}
+                                                                            download={doc.file}
+                                                                                      >
+                                                                                                  <div className="doc-icon-wrap">{doc.icon}</div>
+                                                                                                              <div><div className="doc-name">{doc.label}</div></div>
+                                                                                                                          <div className="doc-dl">↓</div>
+                                                                                                                                    </a>
+                                                                                                                                            ))}
+                                                                                                                                                  </div>
       </div>
     </section>
   )
@@ -413,28 +421,6 @@ function Skills() {
   )
 }
 
-function Documents() {
-  return (
-    <section className="section section-alt" id="documents">
-      <p className="section-label">Downloads</p>
-      <h2 className="section-heading"><em>Documents</em></h2>
-      <div className="docs-grid">
-        {documents.map((doc, i) => (
-          <a
-            key={i}
-            className="doc-card"
-            href={`/documents/${doc.file}`}
-            download={doc.file}
-          >
-            <div className="doc-icon-wrap">{doc.icon}</div>
-            <div><div className="doc-name">{doc.label}</div></div>
-            <div className="doc-dl">↓</div>
-          </a>
-        ))}
-      </div>
-    </section>
-  )
-}
 
 function Contact() {
   return (
