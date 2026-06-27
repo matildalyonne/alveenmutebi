@@ -305,7 +305,7 @@
 .carousel-wrapper:hover .carousel-track { animation-play-state: paused; }
 
 .tool-logo-item {
-  width: 256px; height: 256px;
+  width: 128px; height: 128px;
   flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   background: var(--panel);
@@ -318,7 +318,7 @@
 .tool-logo-item:hover { border-color: var(--lavender); transform: scale(1.08); }
 
 .tool-logo-img {
-  width: 44px; height: 44px;
+  width: 100px; height: 100px;
   object-fit: contain;
 }
 
