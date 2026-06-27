@@ -83,95 +83,83 @@ const technicalSkills = [
   'Basic Accounting',
 ]
 
-// Base items (will be duplicated in the carousel component for seamless looping)
 const toolsRow1Base = [
-  { name: 'Figma',              file: 'figma-seeklogo.png' },
-  { name: 'Git',                file: 'git-seeklogo.png' },
-  { name: 'Netlify',            file: 'netlify-seeklogo.png' },
-  { name: 'PicsArt',            file: 'picsart-seeklogo.png' },
-  { name: 'Python',             file: 'python-seeklogo.png' },
-  { name: 'React',              file: 'react-seeklogo.png' },
-  { name: 'Supabase',           file: 'supabase-seeklogo.png' },
-  { name: 'Vite',               file: 'vite-seeklogo.png' },
+  { name: 'Figma',            file: 'figma-seeklogo.png' },
+  { name: 'Git',              file: 'git-seeklogo.png' },
+  { name: 'Netlify',          file: 'netlify-seeklogo.png' },
+  { name: 'PicsArt',          file: 'picsart-seeklogo.png' },
+  { name: 'Python',           file: 'python-seeklogo.png' },
+  { name: 'React',            file: 'react-seeklogo.png' },
+  { name: 'Supabase',         file: 'supabase-seeklogo.png' },
+  { name: 'Vite',             file: 'vite-seeklogo.png' },
 ]
 
 const toolsRow2Base = [
-  { name: 'CSS3',               file: 'css3-seeklogo.png' },
-  { name: 'Dahua',              file: 'dahua-seeklogo.png' },
-  { name: 'DoLynk Care',        file: 'dolynk.png' },
-  { name: 'HTML5',              file: 'html5-seeklogo.png' },
-  { name: 'LaTeX',              file: 'latex-seeklogo.png' },
-  { name: 'Microsoft Office',   file: 'microsoft office.png' },
-  { name: 'MySQL',              file: 'mysql-seeklogo.png' },
-  { name: 'Node.js',            file: 'node-js-seeklogo.png' },
-  { name: 'Intuit QuickBooks',  file: 'quickbooks-seeklogo.png' },
+  { name: 'CSS3',             file: 'css3-seeklogo.png' },
+  { name: 'Dahua',            file: 'dahua-seeklogo.png' },
+  { name: 'DoLynk Care',      file: 'dolynk.png' },
+  { name: 'HTML5',            file: 'html5-seeklogo.png' },
+  { name: 'LaTeX',            file: 'latex-seeklogo.png' },
+  { name: 'Microsoft Office', file: 'microsoft office.png' },
+  { name: 'MySQL',            file: 'mysql-seeklogo.png' },
+  { name: 'Node.js',          file: 'node-js-seeklogo.png' },
+  { name: 'Intuit QuickBooks',file: 'quickbooks-seeklogo.png' },
 ]
 
+// Certifications — logo is the issuer logo (same layout as edu cards)
 const certifications = [
   {
     name: 'Access Control System Certified Associate (DHCA-ACS)',
-    issuer: 'Dahua Technologies, Kampala — 2026',
-    logo: '/logo/tools/dahua.png',
+    issuer: 'Dahua Technologies, Kampala',
+    year: '2026',
+    logo: '/logo/school/dahua.png',   // place in /public/logo/school/ alongside school logos
   },
   {
     name: 'Data Communication System Certified Associate (DHCA-TXM)',
-    issuer: 'Dahua Technologies, Kampala — 2026',
-    logo: '/logo/tools/dahua.png',
+    issuer: 'Dahua Technologies, Kampala',
+    year: '2026',
+    logo: '/logo/school/dahua.png',
+  },
+  {
+    name: 'Video Intercom System Certified Associate (DHCA-VIS)',
+    issuer: 'Dahua Technologies, Kampala',
+    year: '2026',
+    logo: '/logo/school/dahua.png',
   },
 ]
 
-const documents = [
-  { label: 'Curriculum Vitae',       type: 'PDF', file: 'Mutebi_Alveen_CV.pdf',     icon: '📄' },
-]
-
-/* ── SCRUBABLE CAROUSEL ROW ────────────────────────────────────────────── */
-/*
- * Each row is self-contained. It:
- *   • auto-scrolls via requestAnimationFrame (not CSS animation) so we can
- *     pause / offset it independently per row
- *   • accepts pointer/touch drag to scrub position
- *   • shows a tooltip on tap (touchstart → touchend without move = tap)
- */
+/* ── CAROUSEL ROW ─────────────────────────────────────────────────────── */
 function CarouselRow({ items, direction = 'left', speed = 0.4 }) {
-  // Duplicate items for seamless looping
   const doubled = [...items, ...items]
-
-  const trackRef  = useRef(null)
-  const posRef    = useRef(0)          // current pixel offset
-  const rafRef    = useRef(null)
-  const dragging  = useRef(false)
-  const dragStart = useRef({ x: 0, pos: 0 })
-  const hasMoved  = useRef(false)      // distinguish tap from drag
-  const [activeTooltip, setActiveTooltip] = useState(null) // index or null
-  const [paused, setPaused] = useState(false)
-
-  // The natural "half width" is the width of one copy of the items
-  // We measure it from the DOM after mount
+  const trackRef     = useRef(null)
+  const posRef       = useRef(0)
+  const rafRef       = useRef(null)
+  const dragging     = useRef(false)
+  const dragStart    = useRef({ x: 0, pos: 0 })
   const halfWidthRef = useRef(0)
+  const touchStartX  = useRef(0)
+  const [activeTooltip, setActiveTooltip] = useState(null)
+  const [paused, setPaused]               = useState(false)
 
   useEffect(() => {
     const track = trackRef.current
     if (!track) return
-    // measure after first paint
-    const measure = () => {
-      halfWidthRef.current = track.scrollWidth / 2
-    }
+    const measure = () => { halfWidthRef.current = track.scrollWidth / 2 }
     measure()
     window.addEventListener('resize', measure)
     return () => window.removeEventListener('resize', measure)
   }, [])
 
-  // RAF loop
   const tick = useCallback(() => {
     if (!dragging.current && !paused) {
       const half = halfWidthRef.current
-      if (half === 0) { rafRef.current = requestAnimationFrame(tick); return }
-      const delta = direction === 'left' ? speed : -speed
-      posRef.current = ((posRef.current + delta) % half + half) % half
+      if (half > 0) {
+        const delta = direction === 'left' ? speed : -speed
+        posRef.current = ((posRef.current + delta) % half + half) % half
+      }
     }
-    if (trackRef.current) {
+    if (trackRef.current)
       trackRef.current.style.transform = `translateX(-${posRef.current}px)`
-    }
     rafRef.current = requestAnimationFrame(tick)
   }, [direction, speed, paused])
 
@@ -180,42 +168,25 @@ function CarouselRow({ items, direction = 'left', speed = 0.4 }) {
     return () => cancelAnimationFrame(rafRef.current)
   }, [tick])
 
-  // ── Pointer events (mouse + touch via pointer API) ──
   const onPointerDown = (e) => {
     dragging.current = true
-    hasMoved.current = false
     dragStart.current = { x: e.clientX, pos: posRef.current }
     e.currentTarget.setPointerCapture(e.pointerId)
   }
-
   const onPointerMove = (e) => {
     if (!dragging.current) return
     const dx = e.clientX - dragStart.current.x
-    if (Math.abs(dx) > 4) hasMoved.current = true
     const half = halfWidthRef.current || 1
     posRef.current = ((dragStart.current.pos - dx) % half + half) % half
   }
+  const onPointerUp = () => { dragging.current = false }
 
-  const onPointerUp = () => {
-    dragging.current = false
-  }
-
-  // ── Tap (touch: touchstart/end without significant move) ──
-  const touchStartX = useRef(0)
-
-  const onTouchStart = (e, idx) => {
-    touchStartX.current = e.touches[0].clientX
-  }
-
-  const onTouchEnd = (e, idx) => {
+  const onTouchStart = (e) => { touchStartX.current = e.touches[0].clientX }
+  const onTouchEnd   = (e, idx) => {
     const moved = Math.abs(e.changedTouches[0].clientX - touchStartX.current)
-    if (moved < 8) {
-      // it's a tap — toggle tooltip
-      setActiveTooltip(prev => prev === idx ? null : idx)
-    }
+    if (moved < 8) setActiveTooltip(prev => prev === idx ? null : idx)
   }
 
-  // Dismiss tooltip when tapping elsewhere
   useEffect(() => {
     const dismiss = () => setActiveTooltip(null)
     document.addEventListener('touchstart', dismiss, { passive: true })
@@ -239,7 +210,7 @@ function CarouselRow({ items, direction = 'left', speed = 0.4 }) {
             className="tool-logo-item"
             onMouseEnter={() => setActiveTooltip(i)}
             onMouseLeave={() => setActiveTooltip(null)}
-            onTouchStart={(e) => onTouchStart(e, i)}
+            onTouchStart={onTouchStart}
             onTouchEnd={(e) => { e.stopPropagation(); onTouchEnd(e, i) }}
           >
             <img
@@ -249,9 +220,7 @@ function CarouselRow({ items, direction = 'left', speed = 0.4 }) {
               draggable={false}
               onError={e => { e.target.style.opacity = '0.15' }}
             />
-            {activeTooltip === i && (
-              <div className="tool-tooltip">{t.name}</div>
-            )}
+            {activeTooltip === i && <div className="tool-tooltip">{t.name}</div>}
           </div>
         ))}
       </div>
@@ -259,31 +228,72 @@ function CarouselRow({ items, direction = 'left', speed = 0.4 }) {
   )
 }
 
-/* ── COMPONENTS ───────────────────────────────────────────────────────── */
-
+/* ── NAV ──────────────────────────────────────────────────────────────── */
 function Nav({ dark, toggleDark }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const navLinks = ['experience', 'education', 'skills', 'contact']
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!menuOpen) return
+    const close = (e) => {
+      if (!e.target.closest('.nav')) setMenuOpen(false)
+    }
+    document.addEventListener('click', close)
+    return () => document.removeEventListener('click', close)
+  }, [menuOpen])
+
   return (
     <nav className="nav">
       <div className="nav-logo">Mutebi Alveen</div>
+
+      {/* Desktop links */}
       <div className="nav-links">
-        <a href="#experience">Experience</a>
-        <a href="#education">Education</a>
-        <a href="#skills">Skills</a>
-        <a href="#documents">Documents</a>
-        <a href="#contact">Contact</a>
+        {navLinks.map(id => (
+          <a key={id} href={`#${id}`} style={{ textTransform: 'capitalize' }}>{id}</a>
+        ))}
       </div>
-      <button
-        className="theme-toggle"
-        onClick={toggleDark}
-        aria-label="Toggle colour mode"
-        title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-      >
-        {dark ? '☀️' : '🌙'}
-      </button>
+
+      {/* Right side controls */}
+      <div className="nav-controls">
+        <button
+          className="theme-toggle"
+          onClick={toggleDark}
+          aria-label="Toggle colour mode"
+          title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {dark ? '☀️' : '🌙'}
+        </button>
+
+        {/* Hamburger — mobile only */}
+        <button
+          className={`hamburger ${menuOpen ? 'open' : ''}`}
+          onClick={() => setMenuOpen(o => !o)}
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+        >
+          <span /><span /><span />
+        </button>
+      </div>
+
+      {/* Mobile dropdown */}
+      <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
+        {navLinks.map(id => (
+          <a
+            key={id}
+            href={`#${id}`}
+            style={{ textTransform: 'capitalize' }}
+            onClick={() => setMenuOpen(false)}
+          >
+            {id}
+          </a>
+        ))}
+      </div>
     </nav>
   )
 }
 
+/* ── HERO ─────────────────────────────────────────────────────────────── */
 function Hero() {
   return (
     <section className="hero" id="home">
@@ -301,12 +311,19 @@ function Hero() {
       </p>
       <div className="hero-ctas">
         <a href="#contact" className="btn-primary">Get in touch</a>
-        <a href="#documents" className="btn-outline">Download CV</a>
+        <a
+          href="/documents/Mutebi_Alveen_CV.pdf"
+          download="Mutebi_Alveen_CV.pdf"
+          className="btn-outline"
+        >
+          Download Resume
+        </a>
       </div>
     </section>
   )
 }
 
+/* ── EXPERIENCE ───────────────────────────────────────────────────────── */
 function Experience() {
   return (
     <section className="section" id="experience">
@@ -331,6 +348,7 @@ function Experience() {
   )
 }
 
+/* ── EDUCATION ────────────────────────────────────────────────────────── */
 function Education() {
   return (
     <section className="section section-alt" id="education">
@@ -359,6 +377,7 @@ function Education() {
   )
 }
 
+/* ── SKILLS ───────────────────────────────────────────────────────────── */
 function Skills() {
   return (
     <section className="section" id="skills">
@@ -366,34 +385,40 @@ function Skills() {
       <h2 className="section-heading">Skills &amp; <em>Tools</em></h2>
 
       <div className="skills-grid">
+        {/* Technical skill chips */}
         <div>
           <p className="skills-group-label">Technical Skills</p>
           <div className="chips">
             {technicalSkills.map((s, i) => <span className="chip" key={i}>{s}</span>)}
           </div>
         </div>
+
+        {/* Certifications — matching edu card layout */}
         <div>
           <p className="skills-group-label">Certifications</p>
           <div className="cert-list">
             {certifications.map((c, i) => (
-              <div className="cert-item" key={i}>
-                <img
-                  src={c.logo}
-                  alt="Dahua Technologies"
-                  className="cert-logo"
-                  onError={e => { e.target.style.display = 'none' }}
-                />
-                <div>
-                  <div className="cert-name">{c.name}</div>
-                  <div className="cert-issuer">{c.issuer}</div>
+              <div className="cert-card" key={i}>
+                <div className="cert-card-header">
+                  <img
+                    src={c.logo}
+                    alt={c.issuer}
+                    className="cert-logo"
+                    onError={e => { e.target.style.display = 'none' }}
+                  />
+                  <div>
+                    <div className="cert-issuer-name">{c.issuer}</div>
+                    <div className="cert-year">{c.year}</div>
+                  </div>
                 </div>
+                <div className="cert-name">{c.name}</div>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Two independently-scrubable carousel rows */}
+      {/* Tool carousel */}
       <div className="carousel-section">
         <p className="skills-group-label" style={{ marginBottom: '1.2rem' }}>
           Tools &amp; Platforms
@@ -402,37 +427,16 @@ function Skills() {
           <CarouselRow items={toolsRow1Base} direction="left"  speed={0.45} />
           <CarouselRow items={toolsRow2Base} direction="right" speed={0.35} />
         </div>
+        <p className="carousel-hint">Drag to scrub · Hover or tap a logo for its name</p>
       </div>
     </section>
   )
 }
 
-function Documents() {
-  return (
-    <section className="section section-alt" id="documents">
-      <p className="section-label">Downloads</p>
-      <h2 className="section-heading"><em>Documents</em></h2>
-      <div className="docs-grid">
-        {documents.map((doc, i) => (
-          <a
-            key={i}
-            className="doc-card"
-            href={`/documents/${doc.file}`}
-            download={doc.file}
-          >
-            <div className="doc-icon-wrap">{doc.icon}</div>
-            <div><div className="doc-name">{doc.label}</div></div>
-            <div className="doc-dl">↓</div>
-          </a>
-        ))}
-      </div>
-    </section>
-  )
-}
-
+/* ── CONTACT ──────────────────────────────────────────────────────────── */
 function Contact() {
   return (
-    <section className="section" id="contact">
+    <section className="section section-alt" id="contact">
       <div className="contact-grid">
         <div>
           <p className="section-label">Get In Touch</p>
@@ -485,6 +489,7 @@ function Contact() {
   )
 }
 
+/* ── FOOTER ───────────────────────────────────────────────────────────── */
 function Footer() {
   return (
     <footer className="footer">
@@ -508,8 +513,6 @@ export default function App() {
         <Education />
         <hr className="lav-rule" />
         <Skills />
-        <hr className="lav-rule" />
-        <Documents />
         <hr className="lav-rule" />
         <Contact />
       </main>
