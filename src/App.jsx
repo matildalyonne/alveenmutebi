@@ -112,19 +112,19 @@ const certifications = [
     name: 'Access Control System Certified Associate (DHCA-ACS)',
     issuer: 'Dahua Technologies, Kampala',
     year: '2026',
-    logo: '/logo/school/dahua.png',   // place in /public/logo/school/ alongside school logos
+    logo: '/logo/school/dahua-seeklogo.png',   // place in /public/logo/school/ alongside school logos
   },
   {
     name: 'Data Communication System Certified Associate (DHCA-TXM)',
     issuer: 'Dahua Technologies, Kampala',
     year: '2026',
-    logo: '/logo/school/dahua.png',
+    logo: '/logo/school/dahua-seeklogo.png',
   },
   {
     name: 'Video Intercom System Certified Associate (DHCA-VIS)',
     issuer: 'Dahua Technologies, Kampala',
     year: '2026',
-    logo: '/logo/school/dahua.png',
+    logo: '/logo/school/dahua-seeklogo.png',
   },
 ]
 
