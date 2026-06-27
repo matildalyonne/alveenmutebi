@@ -264,14 +264,6 @@ function Documents() {
       <h2 className="section-heading">
         <em>Documents</em>
       </h2>
-      <p className="docs-intro">
-        All documents are stored in the <code>/public/documents/</code> folder
-        of this site. Drop your files there and they'll be ready to download
-        directly from the cards below.
-      </p>
-      <div className="docs-path-note">
-        📁 &nbsp;/public/documents/ &nbsp;→ &nbsp;place your files here
-      </div>
       <div className="docs-grid">
         {documents.map((doc, i) => (
           <a
@@ -283,7 +275,6 @@ function Documents() {
             <div className="doc-icon-wrap">{doc.icon}</div>
             <div>
               <div className="doc-name">{doc.label}</div>
-              <div className="doc-meta">{doc.type} · Click to download</div>
             </div>
             <div className="doc-dl">↓</div>
           </a>
